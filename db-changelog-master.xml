@@ -7,6 +7,6 @@
 
     <include file="changesets/v1.0.0-crear-tabla-ejemplo.xml"/>
 
-    <include file="changesets/v1.0.1-agregar-columna-descripcion-a-tablapueba.xml"/>
+    <!-- <include file="changesets/v1.0.1-agregar-columna-descripcion-a-tablapueba.xml"/> -->
     
     </databaseChangeLog>
