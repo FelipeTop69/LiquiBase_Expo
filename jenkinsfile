@@ -78,6 +78,64 @@ pipeline {
             }
         }
 
+        stage('Migrar Base de Datos') {
+            steps {
+                script {
+                    echo "🏗️ Ejecutando migraciones de Liquibase para ${env.ENVIRONMENT}..."
+
+                    // --- Definir variables de conexión basadas en el entorno ---
+                    def db_host = "codexy-mssql-${env.ENVIRONMENT}"
+                    def db_name = "codexy_${env.ENVIRONMENT}"
+                    def db_user = "sa"
+                    def db_pass = ""
+
+                    // Usamos las mismas contraseñas que están en tus docker-compose.yml de las DBs
+                    switch (env.ENVIRONMENT) {
+                        case 'develop':
+                            db_pass = "Dev_P@ssw0rd_2025"
+                            break
+                        case 'qa':
+                            db_pass = "Qa_P@ssw0rd_2025"
+                            break
+                        case 'staging':
+                            db_pass = "Staging_P@ssw0rd_2025"
+                            break
+                        case 'production':
+                            db_pass = "Prod_P@ssw0rd_2025"
+                            break
+                    }
+
+                    // --- Ejecutar el contenedor de Liquibase ---
+                    docker.image('liquibase/liquibase:latest')
+                        .withRun(
+                            // Conectar a la misma red que la base de datos
+                            "--network=codexy-network " +
+                            
+                            // Montar la carpeta del driver que creamos
+                            "-v ${PWD}/drivers:/liquibase/drivers " + 
+                            
+                            // Montar el workspace (donde está el db-changelog-master.xml)
+                            "-v ${PWD}:/liquibase/workspace"
+                        ) {
+                        
+                        // Esperar un poco más si la DB acaba de iniciar (opcional pero seguro)
+                        sh "echo '...esperando 5s extra por la DB...' && sleep 5"
+                        
+                        // Ejecutar el comando Liquibase con todos los parámetros
+                        sh """
+                            liquibase --url="jdbc:sqlserver://${db_host}:1433;databaseName=${db_name};trustServerCertificate=true" \
+                                      --username="${db_user}" \
+                                      --password="${db_pass}" \
+                                      --changeLogFile=./db-changelog-master.xml \
+                                      --classpath=/liquibase/drivers/mssql-jdbc-12.6.1.jre11.jar \
+                                      --driver=com.microsoft.sqlserver.jdbc.SQLServerDriver \
+                                      update
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Compilar .NET') {
             steps {
                 script {
