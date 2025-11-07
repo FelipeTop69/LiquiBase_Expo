@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="003-add-direccion-column" author="expo-team">
+    <comment>Agregando la columna Direccion a la tabla Item en el esquema System.</comment>
+
+    <addColumn tableName="Item" schemaName="System">
+        <column name="Direccion" type="varchar(255)">
+            <constraints nullable="true"/> 
+        </column>
+    </addColumn>
+
+    <rollback>
+        <dropColumn tableName="Item" columnName="Direccion" schemaName="System"/>
+    </rollback>
+</changeSet>
+
+</databaseChangeLog>

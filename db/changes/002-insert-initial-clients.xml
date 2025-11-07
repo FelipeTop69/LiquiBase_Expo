@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-insert-initial-clients" author="expo-team">
+        <comment>Insertando clientes de demostración iniciales.</comment>
+
+        <insert tableName="Cliente">
+            <column name="Nombre" value="Juan"/>
+            <column name="Apellido" value="Pérez"/>
+            </insert>
+        
+        <insert tableName="Cliente">
+            <column name="Nombre" value="María"/>
+            <column name="Apellido" value="García"/>
+        </insert>
+        
+        <insert tableName="Cliente">
+            <column name="Nombre" value="Carlos"/>
+            <column name="Apellido" value="López"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="Cliente">
+                <where>Nombre IN ('Juan', 'María', 'Carlos')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

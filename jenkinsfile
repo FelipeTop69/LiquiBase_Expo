@@ -77,7 +77,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage('Migrar Base de Datos') {
             steps {
                 script {
@@ -121,6 +121,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Compilar .NET') {
             steps {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="001-create-cliente-table" author="expo-team">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Cliente"/>
+            </not>
+        </preConditions>
+        
+        <createTable tableName="Cliente">
+            <column name="Id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Nombre" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="Apellido" type="varchar(255)"/>
+            <column name="CreatedAt" type="datetime" defaultValueComputed="GETDATE()"/>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="Cliente"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
